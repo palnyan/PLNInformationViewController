@@ -9,59 +9,73 @@
 #import "PLNInformationViewController.h"
 
 @implementation PLNInformationViewController {
-	UIBarButtonItem *_dismissButton;
+	UIBarButtonItem *_dismissButtonItem;
+	UIView *_headerView;
+	UIImageView *_headerImageView;
+	UILabel *_headerNameLabel;
 }
 
-- (id)init {
+- (instancetype)init {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		[self _initialize];
 	}
 	return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
 	if (self = [super initWithCoder:aDecoder]) {
 		[self _initialize];
 	}
 	return self;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style {
+- (instancetype)initWithStyle:(UITableViewStyle)style {
 	if (self = [super initWithStyle:style]) {
 		[self _initialize];
 	}
 	return self;
 }
 
+- (instancetype)initWithFile:(NSString *)file {
+	if (self = [self init]) {
+		NSString *path = [[NSBundle mainBundle] pathForResource:file ofType:nil];
+		_components = [NSArray arrayWithContentsOfFile:path];
+	}
+	return self;
+}
+
 - (void)_initialize {
-//	NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
-//	_bundleName = infoDictionary[@"CFBundleDisplayName"];
+	NSDictionary *infoDictionary = [NSBundle mainBundle].localizedInfoDictionary;
+	NSLog(@"dic:%@", infoDictionary);
+	NSString *_bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];//infoDictionary[@"CFBundleDisplayName"];
+	NSLog(@"name:%@", _bundleName);
 //	_currentVersion = infoDictionary[@"CFBundleShortVersionString"];
 //	_currentBuild = infoDictionary[@"CFBundleVersion"];
 //	_iconFile = infoDictionary[@"CFBundleIcons"][@"CFBundlePrimaryIcon"][@"CFBundleIconFiles"][0];
 //	
-	_dismissButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(dismiss:)];
+	_dismissButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(dismiss:)];
 	
-//	_headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.bounds.size.width, 77.0f)];
-//	_headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//	self.tableView.tableHeaderView = _headerView;
-//	
-//	_headerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0f, 10.0f, 57.0f, 57.0f)];
-//	_headerImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
-//	_headerImageView.image = [UIImage imageNamed:_iconFile];
-//	if ([_headerImageView respondsToSelector:@selector(layer)]) {
-//		_headerImageView.layer.cornerRadius = 8.0f;
-//	}
-//	_headerImageView.clipsToBounds = YES;
-//	[_headerView addSubview:_headerImageView];
-//	
-//	_headerNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(77.0f, 25.0f, _headerView.frame.size.width-87.0f, 24.0f)];
-//	_headerNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//	_headerNameLabel.text = NSLocalizedString(_bundleName, nil);
-//	_headerNameLabel.font = [UIFont boldSystemFontOfSize:18.0f];
-//	_headerNameLabel.backgroundColor = [UIColor clearColor];
-//	[_headerView addSubview:_headerNameLabel];
-//	
+	_headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.bounds.size.width, 77.0f)];
+	_headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	_headerView.backgroundColor = [UIColor redColor];
+	self.tableView.tableHeaderView = _headerView;
+
+	_headerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0f, 10.0f, 57.0f, 57.0f)];
+	_headerImageView.autoresizingMask = UIViewAutoresizingFlexibleRightMargin;
+	_headerImageView.image = [UIImage imageNamed:[NSBundle mainBundle].infoDictionary[@"CFBundleIcons"][@"CFBundlePrimaryIcon"][@"CFBundleIconFiles"][0]];
+	if ([_headerImageView respondsToSelector:@selector(layer)]) {
+		_headerImageView.layer.cornerRadius = 8.0f;
+	}
+	_headerImageView.clipsToBounds = YES;
+	[_headerView addSubview:_headerImageView];
+	
+	_headerNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(77.0f, 25.0f, _headerView.frame.size.width-87.0f, 24.0f)];
+	_headerNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	_headerNameLabel.text = NSLocalizedString([NSBundle mainBundle].infoDictionary[@"CFBundleDisplayName"], nil);
+	_headerNameLabel.font = [UIFont boldSystemFontOfSize:18.0f];
+	_headerNameLabel.backgroundColor = [UIColor clearColor];
+	[_headerView addSubview:_headerNameLabel];
+//
 //	_licenseTextView = [[UITextView alloc] initWithFrame:CGRectMake(0.0f, 4.0f, self.view.bounds.size.width, 142.0f)];
 //	_licenseTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 //	if ([_licenseTextView respondsToSelector:@selector(layer)]) {
@@ -85,7 +99,10 @@
 	// If PLNInformationViewController pushed in root of navigation controller, show dismiss button on navigation bar.
 	if (![self isInPopover]) {
 		if (self.navigationController && self.navigationController.viewControllers[0] == self) {
-			self.navigationItem.leftBarButtonItem = _dismissButton;
+			self.navigationItem.leftBarButtonItem = _dismissButtonItem;
+		}
+		else {
+			self.navigationItem.leftBarButtonItem = nil;
 		}
 	}
 }
@@ -186,6 +203,20 @@
 //			[v removeFromSuperview];
 //		}
 //	}
+	
+	switch (indexPath.section) {
+		case 0:
+			cell.textLabel.text = NSLocalizedString(@"Version", nil);
+			cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ (%@)", [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"], [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]];
+			cell.imageView.image = nil;
+			cell.selectionStyle = UITableViewCellSelectionStyleNone;
+			cell.accessoryType = UITableViewCellAccessoryNone;
+			cell.accessoryView = nil;
+			break;
+		default:
+			break;
+	}
+	
 	return cell;
 }
 

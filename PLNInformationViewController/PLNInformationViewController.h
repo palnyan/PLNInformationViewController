@@ -8,6 +8,21 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol PLNInformationViewControllerDelegate;
+
 @interface PLNInformationViewController : UITableViewController
+
+@property (weak, nonatomic) id <PLNInformationViewControllerDelegate> delegate;
+
+- (id)initWithFile:(NSString *)file;
+
+@property (strong, nonatomic) NSArray *components;
+
+@end
+
+@protocol PLNInformationViewControllerDelegate <NSObject>
+
+@optional
+- (void)informationViewController:(PLNInformationViewController *)controller openURL:(NSURL *)URL;
 
 @end

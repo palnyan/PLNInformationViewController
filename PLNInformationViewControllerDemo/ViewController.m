@@ -21,7 +21,7 @@
 	[super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 	
-	vc = [[PLNInformationViewController alloc] initWithStyle:UITableViewStyleGrouped];
+	vc = [[PLNInformationViewController alloc] init];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -49,8 +49,17 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:TRUE];
 	
+	switch (indexPath.row) {
+		case 0:
+			[self.navigationController pushViewController:vc animated:TRUE];
+			break;
+		default: {
+			UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+			[self presentViewController:nc animated:TRUE completion:nil];
+			break;
+		}
+	}
 	if (indexPath.row == 0) {
-		[self.navigationController pushViewController:vc animated:TRUE];
 	} else {
 //		cell.textLabel.text = @"present modal";
 	}
