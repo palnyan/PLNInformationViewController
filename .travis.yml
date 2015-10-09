@@ -1,0 +1,3 @@
+language: objective-c
+xcode_workspace: PLNInformationViewController.xcordproj
+xcode_scheme: PLNInformationViewController
