@@ -29,10 +29,7 @@
 	vc.delegate = self;
 }
 
-- (void)didReceiveMemoryWarning {
-	[super didReceiveMemoryWarning];
-	// Dispose of any resources that can be recreated.
-}
+#pragma mark - UITableViewControllerDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return 2;
@@ -49,6 +46,8 @@
 	return cell;
 }
 
+#pragma mark UITableViewControllerDelegate
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:TRUE];
 	
@@ -61,10 +60,6 @@
 			[self presentViewController:nc animated:TRUE completion:nil];
 			break;
 		}
-	}
-	if (indexPath.row == 0) {
-	} else {
-//		cell.textLabel.text = @"present modal";
 	}
 }
 
