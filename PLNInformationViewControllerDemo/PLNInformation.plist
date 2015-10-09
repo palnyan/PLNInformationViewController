@@ -47,12 +47,12 @@
 				<key>Body</key>
 				<string>Please write your questions/comments here.
 
-{BundleName}
+!!{BundleName}!!
 
 Please DO NOT remove the below this. This is the information that need to support.
 ==============================
 {BundleName} {Version} ({Build})
-{DeviceName} (iOS {SystemVersion})
+{DeviceModel} (iOS {SystemVersion})
 ==============================
 </string>
 			</dict>

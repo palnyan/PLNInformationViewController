@@ -7,6 +7,7 @@
 //
 
 #import "PLNInformationViewController.h"
+#import <sys/sysctl.h>
 #import <MessageUI/MessageUI.h>
 
 @interface PLNInformationViewController () <MFMailComposeViewControllerDelegate> {
@@ -60,6 +61,7 @@
 	[_info setValue:infoDictionary[@"CFBundleName"] forKey:@"BundleName"];
 	[_info setValue:infoDictionary[@"CFBundleShortVersionString"] forKey:@"Version"];
 	[_info setValue:infoDictionary[@"CFBundleVersion"] forKey:@"Build"];
+	[_info setValue:[self deviceModel] forKey:@"DeviceModel"];
 	[_info setValue:[[UIDevice currentDevice] systemVersion] forKey:@"SystemVersion"];
 //	_iconFile = infoDictionary[@"CFBundleIcons"][@"CFBundlePrimaryIcon"][@"CFBundleIconFiles"][0];
 //	
@@ -153,6 +155,16 @@
 	else {
 		[[UIApplication sharedApplication] openURL:URL];
 	}
+}
+
+- (NSString *)deviceModel {
+	size_t size;
+	sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+	char *machine = malloc(size);
+	sysctlbyname("hw.machine", machine, &size, NULL, 0);
+	NSString *deviceModel = [NSString stringWithCString:machine encoding:NSUTF8StringEncoding];
+	free(machine);
+	return deviceModel;
 }
 
 #pragma mark - UITableViewDataSource methods
