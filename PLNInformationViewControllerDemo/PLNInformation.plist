@@ -8,9 +8,9 @@
 		<key>Name</key>
 		<string>Support / Feedback</string>
 		<key>VendorName</key>
-		<string>tanuki</string>
+		<string>palnyan</string>
 		<key>VendorLogo</key>
-		<string>Icon</string>
+		<string>palnyan</string>
 		<key>Services</key>
 		<array>
 			<dict>
@@ -19,7 +19,7 @@
 				<key>Title</key>
 				<string>Web</string>
 				<key>URL</key>
-				<string>http://tanuki.in/</string>
+				<string>http://palnyan.com/</string>
 			</dict>
 			<dict>
 				<key>Type</key>
@@ -27,19 +27,9 @@
 				<key>Title</key>
 				<string>Twitter</string>
 				<key>Subtitle</key>
-				<string>@tanuki</string>
+				<string>@palnyan</string>
 				<key>URL</key>
-				<string>http://twitter.com/tanuki</string>
-			</dict>
-			<dict>
-				<key>Type</key>
-				<string>URL</string>
-				<key>Title</key>
-				<string>Facebook</string>
-				<key>Subtitle</key>
-				<string>haruka.togawa</string>
-				<key>URL</key>
-				<string>http://facebook.com/haruka.togawa</string>
+				<string>http://twitter.com/palnyan</string>
 			</dict>
 			<dict>
 				<key>Type</key>
@@ -48,14 +38,22 @@
 				<string>Send mail</string>
 				<key>Subtitle</key>
 				<string></string>
-				<key>ToAddress</key>
-				<string>haruka@tanuki.in</string>
+				<key>ToRecipients</key>
+				<array>
+					<string>info@palnyan.com</string>
+				</array>
+				<key>Subject</key>
+				<string>{BundleName} Support</string>
 				<key>Body</key>
 				<string>Please write your questions/comments here.
 
-
+{BundleName}
 
 Please DO NOT remove the below this. This is the information that need to support.
+==============================
+{BundleName} {Version} ({Build})
+{DeviceName} (iOS {SystemVersion})
+==============================
 </string>
 			</dict>
 			<dict>
@@ -65,8 +63,6 @@ Please DO NOT remove the below this. This is the information that need to suppor
 				<string>Review on App Store</string>
 				<key>AppleID</key>
 				<string>395634685</string>
-				<key>Message</key>
-				<string>Thank you for buying our app. If you like this app, please review and rate this app. We need your support. Take a moment to leave your feedback at the App Store. It won&apos;t take more then a minute to do so. Thank you very much.</string>
 			</dict>
 		</array>
 	</dict>

@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "PLNInformationViewController"
-  s.version      = "0.0.3"
+  s.version      = "0.0.4"
   s.summary      = "A short description of PLNInformationViewController."
 
   s.description  = <<-DESC
@@ -94,7 +94,7 @@ Pod::Spec.new do |s|
   #  the lib prefix of their name.
   #
 
-  # s.framework  = "SomeFramework"
+  s.framework  = "MessageUI"
   # s.frameworks = "SomeFramework", "AnotherFramework"
 
   # s.library   = "iconv"

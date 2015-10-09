@@ -21,7 +21,7 @@
 	[super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 	
-	vc = [[PLNInformationViewController alloc] init];
+	vc = [[PLNInformationViewController alloc] initWithFile:@"PLNInformation"];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -36,13 +36,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	static NSString *ReuseIdentifier = @"Cell";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ReuseIdentifier];
-	
 	if (indexPath.row == 0) {
 		cell.textLabel.text = @"push";
 	} else {
 		cell.textLabel.text = @"present modal";
 	}
-	
 	return cell;
 }
 

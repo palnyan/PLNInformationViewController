@@ -7,13 +7,23 @@
 //
 
 #import "PLNInformationViewController.h"
+#import <MessageUI/MessageUI.h>
 
-@implementation PLNInformationViewController {
+@interface PLNInformationViewController () <MFMailComposeViewControllerDelegate> {
 	UIBarButtonItem *_dismissButtonItem;
 	UIView *_headerView;
 	UIImageView *_headerImageView;
 	UILabel *_headerNameLabel;
+	UITextView *_licenseTextView;
+	
+	NSMutableDictionary *_info;
 }
+
+- (void)_initialize;
+
+@end
+
+@implementation PLNInformationViewController
 
 - (instancetype)init {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
@@ -38,26 +48,25 @@
 
 - (instancetype)initWithFile:(NSString *)file {
 	if (self = [self init]) {
-		NSString *path = [[NSBundle mainBundle] pathForResource:file ofType:nil];
+		NSString *path = [[NSBundle mainBundle] pathForResource:file ofType:@"plist"];
 		_components = [NSArray arrayWithContentsOfFile:path];
 	}
 	return self;
 }
 
 - (void)_initialize {
-	NSDictionary *infoDictionary = [NSBundle mainBundle].localizedInfoDictionary;
-	NSLog(@"dic:%@", infoDictionary);
-	NSString *_bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];//infoDictionary[@"CFBundleDisplayName"];
-	NSLog(@"name:%@", _bundleName);
-//	_currentVersion = infoDictionary[@"CFBundleShortVersionString"];
-//	_currentBuild = infoDictionary[@"CFBundleVersion"];
+	_info = [[NSMutableDictionary alloc] init];
+	NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
+	[_info setValue:infoDictionary[@"CFBundleName"] forKey:@"BundleName"];
+	[_info setValue:infoDictionary[@"CFBundleShortVersionString"] forKey:@"Version"];
+	[_info setValue:infoDictionary[@"CFBundleVersion"] forKey:@"Build"];
+	[_info setValue:[[UIDevice currentDevice] systemVersion] forKey:@"SystemVersion"];
 //	_iconFile = infoDictionary[@"CFBundleIcons"][@"CFBundlePrimaryIcon"][@"CFBundleIconFiles"][0];
 //	
 	_dismissButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Dismiss", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(dismiss:)];
 	
 	_headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.bounds.size.width, 77.0f)];
 	_headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	_headerView.backgroundColor = [UIColor redColor];
 	self.tableView.tableHeaderView = _headerView;
 
 	_headerImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0f, 10.0f, 57.0f, 57.0f)];
@@ -71,20 +80,20 @@
 	
 	_headerNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(77.0f, 25.0f, _headerView.frame.size.width-87.0f, 24.0f)];
 	_headerNameLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	_headerNameLabel.text = NSLocalizedString([NSBundle mainBundle].infoDictionary[@"CFBundleDisplayName"], nil);
+	_headerNameLabel.text = NSLocalizedString(_info[@"BundleName"], nil);
 	_headerNameLabel.font = [UIFont boldSystemFontOfSize:18.0f];
 	_headerNameLabel.backgroundColor = [UIColor clearColor];
 	[_headerView addSubview:_headerNameLabel];
-//
-//	_licenseTextView = [[UITextView alloc] initWithFrame:CGRectMake(0.0f, 4.0f, self.view.bounds.size.width, 142.0f)];
-//	_licenseTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-//	if ([_licenseTextView respondsToSelector:@selector(layer)]) {
-//		_licenseTextView.layer.cornerRadius = 8.0f;
-//	}
-//	_licenseTextView.layer.cornerRadius = 10.0f;
-//	_licenseTextView.clipsToBounds = YES;
-//	_licenseTextView.editable = NO;
-//	_licenseTextView.scrollIndicatorInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
+
+	_licenseTextView = [[UITextView alloc] initWithFrame:CGRectMake(0.0f, 4.0f, self.view.bounds.size.width, 172.0f)];
+	_licenseTextView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	if ([_licenseTextView respondsToSelector:@selector(layer)]) {
+		_licenseTextView.layer.cornerRadius = 8.0f;
+	}
+	_licenseTextView.layer.cornerRadius = 10.0f;
+	_licenseTextView.clipsToBounds = YES;
+	_licenseTextView.editable = NO;
+	_licenseTextView.scrollIndicatorInsets = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
 }
 
 - (void)viewDidLoad {
@@ -135,60 +144,65 @@
 	return NO;
 }
 
+- (void)openURL:(NSURL *)URL {
+	if (!URL) return;
+	
+	if ([_delegate respondsToSelector:@selector(informationViewController:openURL:)]) {
+		[_delegate informationViewController:self openURL:URL];
+	}
+	else {
+		[[UIApplication sharedApplication] openURL:URL];
+	}
+}
 
 #pragma mark - UITableViewDataSource methods
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;//_components.count + 1;
+	return _components.count + 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	if (section == 0) return nil;
 	
-//	NSDictionary *data = _components[section-1];
-//	//	NSString *s = data[@"Type"];
-//	
-//	return data[@"Name"];
-	return nil;
+	NSDictionary *data = _components[section-1];
+	return data[@"Name"];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	if (section == 0) {
 		return 1;
 	}
-//	else {
-//		NSDictionary *data = _components[section-1];
-//		NSString *s = data[@"Type"];
-//		
-//		if ([s isEqualToString:@"Copyrights"]) {
-//			NSArray *services = data[@"Services"];
-//			return services.count + 1;
-//		}
-//		else if ([s isEqualToString:@"License"]) {
-//			return 1;
-//		}
-//	}
+	else {
+		NSDictionary *data = _components[section-1];
+		NSString *type = data[@"Type"];
+		
+		if ([type isEqualToString:@"Copyrights"]) {
+			NSArray *services = data[@"Services"];
+			return services.count + 1;
+		}
+		else if ([type isEqualToString:@"License"]) {
+			return 1;
+		}
+	}
 	return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (indexPath.section == 0) return 44.0f;
 	
-//	NSDictionary *data = _components[indexPath.section-1];
-//	NSString *s = data[@"Type"];
-//	
-//	if ([s isEqualToString:@"Copyrights"]) {
-//		if (indexPath.row == 0) {
-//			return 80.0f;
-//		}
-//		return 44.0f;
-//	}
-//	else if ([s isEqualToString:@"Applications"]) {
-//		return 80.0f;
-//	}
-//	else if ([s isEqualToString:@"License"]) {
-//		return 150.0f;
-//	}
+	NSDictionary *data = _components[indexPath.section-1];
+	NSString *type = data[@"Type"];
+	if ([type isEqualToString:@"Copyrights"]) {
+		if (indexPath.row == 0) {
+			return 80.0f;
+		}
+	}
+	else if ([type isEqualToString:@"Applications"]) {
+		return 80.0f;
+	}
+	else if ([type isEqualToString:@"License"]) {
+		return 180.0f;
+	}
 	return 44.0f;
 }
 
@@ -198,26 +212,134 @@
 	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:ReuseIdentifier];
 	}
-//	else {
-//		for (id v in cell.contentView.subviews) {
-//			[v removeFromSuperview];
-//		}
-//	}
+	else {
+		for (id v in cell.contentView.subviews) {
+			[v removeFromSuperview];
+		}
+	}
 	
-	switch (indexPath.section) {
-		case 0:
-			cell.textLabel.text = NSLocalizedString(@"Version", nil);
-			cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ (%@)", [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"], [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]];
-			cell.imageView.image = nil;
-			cell.selectionStyle = UITableViewCellSelectionStyleNone;
-			cell.accessoryType = UITableViewCellAccessoryNone;
-			cell.accessoryView = nil;
-			break;
-		default:
-			break;
+	cell.textLabel.text = nil;
+	cell.detailTextLabel.text = nil;
+	cell.imageView.image = nil;
+	cell.selectionStyle = UITableViewCellSelectionStyleNone;
+	cell.accessoryType = UITableViewCellAccessoryNone;
+	cell.accessoryView = nil;
+	
+	if (indexPath.section == 0) {
+		cell.textLabel.text = NSLocalizedString(@"Version", nil);
+		cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ (%@)", [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"], [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]];
+	} else {
+		NSDictionary *data = _components[indexPath.section-1];
+		NSString *type = data[@"Type"];
+		if ([type isEqualToString:@"Copyrights"]) {
+			if (indexPath.row == 0) {
+				cell.textLabel.text = data[@"VendorName"];
+				if ([data.allKeys containsObject:@"VendorLogo"]) {
+					cell.imageView.image = [UIImage imageNamed:data[@"VendorLogo"]];
+					NSLog(@"logo:%@(%@)", data[@"VendorLogo"], cell.imageView.image);
+					if ([cell.imageView respondsToSelector:@selector(layer)]) {
+						cell.imageView.layer.cornerRadius = 8.0f;
+					}
+					cell.imageView.clipsToBounds = YES;
+				}
+			}
+			else {
+				NSArray *services = data[@"Services"];
+				NSDictionary *service = services[indexPath.row-1];
+				NSString *type = service[@"Type"];
+				NSString *title = service[@"Title"];
+				NSString *subtitle = service[@"Subtitle"];
+				
+				cell.textLabel.text = title;
+				if ([type isEqualToString:@"URL"]) {
+					NSString *stringURL = service[@"URL"];
+					cell.detailTextLabel.text = [service.allKeys containsObject:@"Subtitle"] ? subtitle : stringURL;
+					cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+				}
+				else if ([type isEqualToString:@"Mail"]) {
+					NSString *toAddress = service[@"ToAddress"];
+					cell.detailTextLabel.text = [service.allKeys containsObject:@"Subtitle"] ? subtitle : toAddress;
+				}
+				else if ([type isEqualToString:@"AppStoreReview"]) {
+				}
+				cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+			}
+		}
+		else if ([type isEqualToString:@"License"]) {
+			_licenseTextView.text = data[@"Description"];
+			[cell.contentView addSubview:_licenseTextView];
+		}
 	}
 	
 	return cell;
+}
+
+#pragma mark UITableViewDelegate methods
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+	
+	if (indexPath.section == 0) return;
+	
+	NSDictionary *data = _components[indexPath.section-1];
+	NSString *type = data[@"Type"];
+	if ([type isEqualToString:@"Copyrights"]) {
+		if (indexPath.row > 0) {
+			NSArray *services = data[@"Services"];
+			NSDictionary *service = services[indexPath.row-1];
+			NSString *type = service[@"Type"];
+			if ([type isEqualToString:@"URL"]) {
+				NSString *stringURL = service[@"URL"];
+				NSURL *URL = [NSURL URLWithString:stringURL];
+				[self openURL:URL];
+			}
+			else if ([type isEqualToString:@"Mail"]) {
+				MFMailComposeViewController *vc = [[MFMailComposeViewController alloc] init];
+				if (vc == nil) return;
+				
+				vc.mailComposeDelegate = self;
+				[vc setToRecipients:service[@"ToRecipients"]];
+				NSString *subject = service[@"Subject"];
+				NSString *body = service[@"Body"];
+				for (NSString *key in _info.allKeys) {
+					NSString *placeholder = [NSString stringWithFormat:@"{%@}", key];
+					subject = [subject stringByReplacingOccurrencesOfString:placeholder withString:_info[key]];
+					body = [body stringByReplacingOccurrencesOfString:placeholder withString:_info[key]];
+				}
+				[vc setSubject:subject];
+				[vc setMessageBody:body isHTML:NO];
+				[self presentViewController:vc animated:YES completion:nil];
+			}
+			else if ([type isEqualToString:@"AppStoreReview"]) {
+//				NSString *title = service[@"Title"];
+//				_appleID = [service[@"AppleID"] integerValue];
+//				if (NSStringFromClass([SKStoreProductViewController class]) != nil) {
+//					SKStoreProductViewController *vc = [[SKStoreProductViewController alloc] init];
+//					[vc loadProductWithParameters:@{SKStoreProductParameterITunesItemIdentifier:@(_appleID)} completionBlock:nil];
+//					vc.delegate = self;
+//					[self presentViewController:vc animated:YES completion:nil];
+//				}
+//				else if ([service.allKeys containsObject:@"Message"]) {
+//					NSString *message = service[@"Message"];
+//					NSString *cancelButtonTitle = NSLocalizedString(@"No thanks", nil);
+//					NSString *rateButtonTitle = NSLocalizedString(@"Rate it!", nil);
+//					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:cancelButtonTitle otherButtonTitles:rateButtonTitle, nil];
+//					[alert show];
+//				}
+//				else {
+//					[self openAppStoreReviewWithAppleID:_appleID];
+//				}
+			}
+		}
+		
+		
+	}
+}
+
+#pragma mark - MFMailComposeViewControllerDelegate methods
+
+- (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
