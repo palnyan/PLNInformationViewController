@@ -24,5 +24,6 @@
 
 @optional
 - (void)informationViewController:(PLNInformationViewController *)controller openURL:(NSURL *)URL;
+- (void)informationViewController:(PLNInformationViewController *)controller openLicenseInfo:(NSDictionary *)info;
 
 @end

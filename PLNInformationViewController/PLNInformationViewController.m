@@ -10,6 +10,9 @@
 #import <sys/sysctl.h>
 #import <MessageUI/MessageUI.h>
 
+#define AppStoreURL_iOS6_OR_Earlier @"itms-apps://itunes.apple.com/app/id%@"
+#define AppStoreURL_iOS7_OR_Later @"https://itunes.apple.com/jp/app/id%@&mt=8"
+
 @interface PLNInformationViewController () <MFMailComposeViewControllerDelegate> {
 	UIBarButtonItem *_dismissButtonItem;
 	UIView *_headerView;
@@ -26,28 +29,28 @@
 
 @implementation PLNInformationViewController
 
-- (instancetype)init {
+- (id)init {
 	if (self = [super initWithStyle:UITableViewStyleGrouped]) {
 		[self _initialize];
 	}
 	return self;
 }
 
-- (nullable instancetype)initWithCoder:(NSCoder *)aDecoder {
+- (id)initWithCoder:(NSCoder *)aDecoder {
 	if (self = [super initWithCoder:aDecoder]) {
 		[self _initialize];
 	}
 	return self;
 }
 
-- (instancetype)initWithStyle:(UITableViewStyle)style {
+- (id)initWithStyle:(UITableViewStyle)style {
 	if (self = [super initWithStyle:style]) {
 		[self _initialize];
 	}
 	return self;
 }
 
-- (instancetype)initWithFile:(NSString *)file {
+- (id)initWithFile:(NSString *)file {
 	if (self = [self init]) {
 		NSString *path = [[NSBundle mainBundle] pathForResource:file ofType:@"plist"];
 		_components = [NSArray arrayWithContentsOfFile:path];
@@ -118,6 +121,14 @@
 	}
 }
 
+#pragma mark - Properties
+
+- (void)setComponents:(NSArray *)components {
+	_components = components;
+	[self.tableView reloadData];
+}
+
+
 #pragma mark - Actions
 
 - (void)dismiss:(id)sender {
@@ -157,6 +168,16 @@
 	}
 }
 
+- (BOOL)systemVersionIsLaterThanVersion:(NSString *)version {
+	NSString *currentSystemVersion = [[UIDevice currentDevice] systemVersion];
+	if ([version compare:currentSystemVersion options:NSNumericSearch] != NSOrderedDescending) {
+		// version <= currentSystemVersion
+		return YES;
+	}
+	// version > currentSystemVersion
+	return NO;
+}
+
 - (NSString *)deviceModel {
 	size_t size;
 	sysctlbyname("hw.machine", NULL, &size, NULL, 0);
@@ -167,7 +188,7 @@
 	return deviceModel;
 }
 
-#pragma mark - UITableViewDataSource methods
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return _components.count + 1;
@@ -213,6 +234,15 @@
 		return 80.0f;
 	}
 	else if ([type isEqualToString:@"License"]) {
+		id description = data[@"Description"];
+		NSLog(@"description class:%@", [description class]);
+		if ([description isKindOfClass:[NSString class]]) {
+			NSLog(@"NSString");
+			return 180.0f;
+		} else if ([description isKindOfClass:[NSDictionary class]]) {
+			NSLog(@"NSDic");
+			return 44.0f;
+		}
 		return 180.0f;
 	}
 	return 44.0f;
@@ -278,15 +308,22 @@
 			}
 		}
 		else if ([type isEqualToString:@"License"]) {
-			_licenseTextView.text = data[@"Description"];
-			[cell.contentView addSubview:_licenseTextView];
+			id description = data[@"Description"];
+			if ([description isKindOfClass:[NSString class]]) {
+				_licenseTextView.text = data[@"Description"];
+				[cell.contentView addSubview:_licenseTextView];
+			} else if ([description isKindOfClass:[NSDictionary class]]) {
+				NSLog(@"NSDic");
+				cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+			}
 		}
 	}
 	
 	return cell;
 }
 
-#pragma mark UITableViewDelegate methods
+#pragma mark UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -323,6 +360,15 @@
 				[self presentViewController:vc animated:YES completion:nil];
 			}
 			else if ([type isEqualToString:@"AppStoreReview"]) {
+				NSString *stringURL;
+				if ([self systemVersionIsLaterThanVersion:@"7.0"]) {
+					stringURL = AppStoreURL_iOS7_OR_Later;
+				}
+				else {
+					stringURL = AppStoreURL_iOS6_OR_Earlier;
+				}
+				stringURL = [NSString stringWithFormat:stringURL, service[@"AppleID"]];
+				[self openURL:[NSURL URLWithString:stringURL]];
 //				NSString *title = service[@"Title"];
 //				_appleID = [service[@"AppleID"] integerValue];
 //				if (NSStringFromClass([SKStoreProductViewController class]) != nil) {
@@ -345,10 +391,18 @@
 		}
 		
 		
+	} else if ([type isEqualToString:@"License"]) {
+		id description = data[@"Description"];
+		if ([description isKindOfClass:[NSDictionary class]]) {
+			NSLog(@"NSDic");
+			if ([_delegate respondsToSelector:@selector(informationViewController:openLicenseInfo:)]) {
+				[_delegate informationViewController:self openLicenseInfo:description];
+			}
+		}
 	}
 }
 
-#pragma mark - MFMailComposeViewControllerDelegate methods
+#pragma mark - MFMailComposeViewControllerDelegate
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
 	[self dismissViewControllerAnimated:YES completion:nil];

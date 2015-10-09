@@ -70,8 +70,8 @@ Please DO NOT remove the below this. This is the information that need to suppor
 		<key>Type</key>
 		<string>License</string>
 		<key>Name</key>
-		<string>License / Acknowledgement</string>
-		<key>Description</key>
+		<string>Acknowledgements</string>
+		<key>DescriptionExample</key>
 		<string>gma;dflgf
 adfg
 adg
@@ -90,6 +90,13 @@ fgfadgad
 fgad
 gad
 gdafgafdgadfg</string>
+		<key>Description</key>
+		<dict>
+			<key>Type</key>
+			<string>plist</string>
+			<key>Filename</key>
+			<string>Acknowledgements</string>
+		</dict>
 	</dict>
 </array>
 </plist>

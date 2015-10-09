@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "PLNInformationViewController"
-  s.version      = "0.0.4"
+  s.version      = "0.0.5"
   s.summary      = "A short description of PLNInformationViewController."
 
   s.description  = <<-DESC
@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
   #  profile URL.
   #
 
-  s.author    = "Haruka Togawa"
+  s.author    = "Haruka Togawa (a.k.a. palnyan)"
   s.social_media_url   = "http://twitter.com/palnyan"
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

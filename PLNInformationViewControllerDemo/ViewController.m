@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "PLNInformationViewController.h"
 
-@interface ViewController () {
+@interface ViewController () <PLNInformationViewControllerDelegate> {
 	PLNInformationViewController *vc;
 }
 
@@ -21,7 +21,12 @@
 	[super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
 	
-	vc = [[PLNInformationViewController alloc] initWithFile:@"PLNInformation"];
+//	vc = [[PLNInformationViewController alloc] initWithFile:@"PLNInformation"];
+	
+	vc = [[PLNInformationViewController alloc] init];
+	NSString *path = [[NSBundle mainBundle] pathForResource:@"PLNInformation" ofType:@"plist"];
+	vc.components = [NSArray arrayWithContentsOfFile:path];
+	vc.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -61,6 +66,12 @@
 	} else {
 //		cell.textLabel.text = @"present modal";
 	}
+}
+
+#pragma mark - PLNInformationViewControllerDelegate
+
+- (void)informationViewController:(PLNInformationViewController *)controller openLicenseInfo:(NSDictionary *)info {
+	NSLog(@"License:%@", info);
 }
 
 @end
