@@ -104,7 +104,7 @@
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	
-	self.title = NSLocalizedString(@"PLNInformationTitle", nil);
+	self.title = NSLocalizedString(@"PLNInformationViewControllerTitle", nil);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -197,6 +197,13 @@
 	if (section == 0) return nil;
 	
 	NSDictionary *data = _components[section-1];
+	NSString *type = data[@"Type"];
+	if ([type isEqualToString:@"License"]) {
+		id description = data[@"Description"];
+		if ([description isKindOfClass:[NSDictionary class]]){
+			return nil;
+		}
+	}
 	return data[@"Name"];
 }
 
@@ -312,7 +319,7 @@
 				_licenseTextView.text = data[@"Description"];
 				[cell.contentView addSubview:_licenseTextView];
 			} else if ([description isKindOfClass:[NSDictionary class]]) {
-				NSLog(@"NSDic");
+				cell.textLabel.text = NSLocalizedString(data[@"Name"], nil);
 				cell.selectionStyle = UITableViewCellSelectionStyleDefault;
 				cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 			}
@@ -393,7 +400,6 @@
 	} else if ([type isEqualToString:@"License"]) {
 		id description = data[@"Description"];
 		if ([description isKindOfClass:[NSDictionary class]]) {
-			NSLog(@"NSDic");
 			if ([_delegate respondsToSelector:@selector(informationViewController:openLicenseInfo:)]) {
 				[_delegate informationViewController:self openLicenseInfo:description];
 			}
