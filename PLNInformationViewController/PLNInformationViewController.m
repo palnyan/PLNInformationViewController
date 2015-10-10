@@ -298,7 +298,7 @@
 				NSString *title = service[@"Title"];
 				NSString *subtitle = service[@"Subtitle"];
 				
-				cell.textLabel.text = title;
+				cell.textLabel.text = NSLocalizedString(title, nil);
 				if ([type isEqualToString:@"URL"]) {
 					NSString *stringURL = service[@"URL"];
 					cell.detailTextLabel.text = [service.allKeys containsObject:@"Subtitle"] ? subtitle : stringURL;
