@@ -1,15 +1,7 @@
 Pod::Spec.new do |s|
-
-  # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  #
-  #  These will help people to find your library, and whilst it
-  #  can feel like a chore to fill in it's definitely to your advantage. The
-  #  summary should be tweet-length, and the description more in depth.
-  #
-
   s.name         = "PLNInformationViewController"
-  s.version      = "0.0.7"
-  s.summary      = "A short description of PLNInformationViewController."
+  s.version      = "0.0.8"
+  s.summary      = "PLNInformationViewController provides simple UI for about this application."
 
   s.description  = <<-DESC
                    A longer description of PLNInformationViewController in Markdown format.
@@ -24,38 +16,11 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
 
 
-  # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  #
-  #  Specify the authors of the library, with email addresses. Email addresses
-  #  of the authors are extracted from the SCM log. E.g. $ git log. CocoaPods also
-  #  accepts just a name if you'd rather not provide an email address.
-  #
-  #  Specify a social_media_url where others can refer to, for example a twitter
-  #  profile URL.
-  #
-
   s.author    = "Haruka Togawa (a.k.a. palnyan)"
   s.social_media_url   = "http://twitter.com/palnyan"
 
   s.platform     = :ios, "6.0"
-
-  # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  #
-  #  Specify the location from where the source should be retrieved.
-  #  Supports git, hg, bzr, svn and HTTP.
-  #
-
   s.source       = { :git => "https://github.com/palnyan/PLNInformationViewController.git", :tag => "v#{s.version}" }
-
-
-  # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-  #
-  #  CocoaPods is smart about how it includes source code. For source files
-  #  giving a folder will include any swift, h, m, mm, c & cpp files.
-  #  For header files it will include any header in the folder.
-  #  Not including the public_header_files will make all headers public.
-  #
-
   s.source_files  = "PLNInformationViewController/*.{h,m}"
 
   # s.public_header_files = "Classes/**/*.h"
@@ -74,7 +39,4 @@ Pod::Spec.new do |s|
 
   s.framework  = "MessageUI"
   # s.frameworks = "SomeFramework", "AnotherFramework"
-
-  # s.library   = "iconv"
-  # s.libraries = "iconv", "xml2"
 end
