@@ -10,8 +10,7 @@
 #import <sys/sysctl.h>
 #import <MessageUI/MessageUI.h>
 
-#define AppStoreURL_iOS6_OR_Earlier @"itms-apps://itunes.apple.com/app/id%@"
-#define AppStoreURL_iOS7_OR_Later @"https://itunes.apple.com/jp/app/id%@&mt=8"
+#define AppStoreReviewURL @"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=%@&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8"
 
 @interface PLNInformationViewController () <MFMailComposeViewControllerDelegate> {
 	UIBarButtonItem *_dismissButtonItem;
@@ -111,13 +110,11 @@
 	[super viewWillAppear:animated];
 	
 	// If PLNInformationViewController pushed in root of navigation controller, show dismiss button on navigation bar.
-	if (![self isInPopover]) {
-		if (self.navigationController && self.navigationController.viewControllers[0] == self) {
-			self.navigationItem.leftBarButtonItem = _dismissButtonItem;
-		}
-		else {
-			self.navigationItem.leftBarButtonItem = nil;
-		}
+	if (self.navigationController && self.navigationController.viewControllers[0] == self) {
+		self.navigationItem.leftBarButtonItem = _dismissButtonItem;
+	}
+	else {
+		self.navigationItem.leftBarButtonItem = nil;
 	}
 }
 
@@ -143,19 +140,6 @@
 
 #pragma mark - Helper methods
 
-- (BOOL)isInPopover {
-	UIView *currentView = self.view;
-	while (currentView) {
-		NSString *classNameOfCurrentView = NSStringFromClass([currentView class]);
-		NSString *searchString = @"UIPopoverView";
-		if ([classNameOfCurrentView rangeOfString:searchString options:NSCaseInsensitiveSearch].location != NSNotFound) {
-			return YES;
-		}
-		currentView = currentView.superview;
-	}
-	return NO;
-}
-
 - (void)openURL:(NSURL *)URL {
 	if (!URL) return;
 	
@@ -165,16 +149,6 @@
 	else {
 		[[UIApplication sharedApplication] openURL:URL];
 	}
-}
-
-- (BOOL)systemVersionIsLaterThanVersion:(NSString *)version {
-	NSString *currentSystemVersion = [[UIDevice currentDevice] systemVersion];
-	if ([version compare:currentSystemVersion options:NSNumericSearch] != NSOrderedDescending) {
-		// version <= currentSystemVersion
-		return YES;
-	}
-	// version > currentSystemVersion
-	return NO;
 }
 
 - (NSString *)deviceModel {
@@ -241,12 +215,11 @@
 	}
 	else if ([type isEqualToString:@"License"]) {
 		id description = data[@"Description"];
-		NSLog(@"description class:%@", [description class]);
 		if ([description isKindOfClass:[NSString class]]) {
-			NSLog(@"NSString");
+//			NSLog(@"NSString");
 			return 180.0f;
 		} else if ([description isKindOfClass:[NSDictionary class]]) {
-			NSLog(@"NSDic");
+//			NSLog(@"NSDic");
 			return 44.0f;
 		}
 		return 180.0f;
@@ -317,6 +290,7 @@
 			id description = data[@"Description"];
 			if ([description isKindOfClass:[NSString class]]) {
 				_licenseTextView.text = data[@"Description"];
+				_licenseTextView.frame = CGRectMake(0.0f, 4.0f, self.view.bounds.size.width, 172.0f);
 				[cell.contentView addSubview:_licenseTextView];
 			} else if ([description isKindOfClass:[NSDictionary class]]) {
 				cell.textLabel.text = NSLocalizedString(data[@"Name"], nil);
@@ -366,33 +340,8 @@
 				[self presentViewController:vc animated:YES completion:nil];
 			}
 			else if ([type isEqualToString:@"AppStoreReview"]) {
-				NSString *stringURL;
-				if ([self systemVersionIsLaterThanVersion:@"7.0"]) {
-					stringURL = AppStoreURL_iOS7_OR_Later;
-				}
-				else {
-					stringURL = AppStoreURL_iOS6_OR_Earlier;
-				}
-				stringURL = [NSString stringWithFormat:stringURL, service[@"AppleID"]];
+				NSString *stringURL = [NSString stringWithFormat:AppStoreReviewURL, service[@"AppleID"]];
 				[self openURL:[NSURL URLWithString:stringURL]];
-//				NSString *title = service[@"Title"];
-//				_appleID = [service[@"AppleID"] integerValue];
-//				if (NSStringFromClass([SKStoreProductViewController class]) != nil) {
-//					SKStoreProductViewController *vc = [[SKStoreProductViewController alloc] init];
-//					[vc loadProductWithParameters:@{SKStoreProductParameterITunesItemIdentifier:@(_appleID)} completionBlock:nil];
-//					vc.delegate = self;
-//					[self presentViewController:vc animated:YES completion:nil];
-//				}
-//				else if ([service.allKeys containsObject:@"Message"]) {
-//					NSString *message = service[@"Message"];
-//					NSString *cancelButtonTitle = NSLocalizedString(@"No thanks", nil);
-//					NSString *rateButtonTitle = NSLocalizedString(@"Rate it!", nil);
-//					UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:cancelButtonTitle otherButtonTitles:rateButtonTitle, nil];
-//					[alert show];
-//				}
-//				else {
-//					[self openAppStoreReviewWithAppleID:_appleID];
-//				}
 			}
 		}
 		
@@ -405,6 +354,12 @@
 			}
 		}
 	}
+}
+
+#pragma mark - UIPopoverControllerDelegate
+
+- (void)prepareForPopoverPresentation:(UIPopoverPresentationController *)popoverPresentationController {
+	NSLog(@"prepareForPopoverPresentation:");
 }
 
 #pragma mark - MFMailComposeViewControllerDelegate

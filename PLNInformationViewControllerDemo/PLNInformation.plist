@@ -71,13 +71,13 @@ Please DO NOT remove the below this. This is the information that need to suppor
 		<string>License</string>
 		<key>Name</key>
 		<string>Acknowledgements</string>
-		<key>DescriptionExample</key>
+		<key>Description</key>
 		<string>long text here
 linebreak enabled
 aaa
 bbb
-ccc</string>
-		<key>Description</key>
+ccc dddddddd eee ffffffff ggggggggggggggg hhhhh iiiiiiii jjjjjjj kkkkkkkkkkkkkkkk lllllll mmmmmmmmm oooooo pppppp</string>
+		<key>DescriptionExample</key>
 		<dict>
 			<key>Type</key>
 			<string>plist</string>

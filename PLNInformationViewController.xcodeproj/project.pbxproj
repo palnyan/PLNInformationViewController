@@ -18,6 +18,8 @@
 		E90654011BC7673800452883 /* libPLNInformationViewController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E90653B41BC7558600452883 /* libPLNInformationViewController.a */; };
 		E90654031BC7683500452883 /* PLNInformation.plist in Resources */ = {isa = PBXBuildFile; fileRef = E90654021BC7683500452883 /* PLNInformation.plist */; settings = {ASSET_TAGS = (); }; };
 		E90654081BC78F5D00452883 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90654071BC78F5D00452883 /* MessageUI.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		E96237CE1BCC88A10022274A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E96237CD1BCC88A10022274A /* Localizable.strings */; settings = {ASSET_TAGS = (); }; };
+		E96237D01BCC9EFE0022274A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E96237CF1BCC9EFE0022274A /* Default-568h@2x.png */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +51,8 @@
 		E90653FC1BC763F600452883 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E90654021BC7683500452883 /* PLNInformation.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PLNInformation.plist; sourceTree = "<group>"; };
 		E90654071BC78F5D00452883 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		E96237CD1BCC88A10022274A /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		E96237CF1BCC9EFE0022274A /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +115,8 @@
 				E90653F91BC763F600452883 /* LaunchScreen.storyboard */,
 				E90653FC1BC763F600452883 /* Info.plist */,
 				E90654021BC7683500452883 /* PLNInformation.plist */,
+				E96237CF1BCC9EFE0022274A /* Default-568h@2x.png */,
+				E96237CD1BCC88A10022274A /* Localizable.strings */,
 				E90653EB1BC763F600452883 /* Supporting Files */,
 			);
 			path = PLNInformationViewControllerDemo;
@@ -210,10 +216,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E96237CE1BCC88A10022274A /* Localizable.strings in Resources */,
 				E90653FB1BC763F600452883 /* LaunchScreen.storyboard in Resources */,
 				E90653F81BC763F600452883 /* Assets.xcassets in Resources */,
 				E90654031BC7683500452883 /* PLNInformation.plist in Resources */,
 				E90653F61BC763F600452883 /* Main.storyboard in Resources */,
+				E96237D01BCC9EFE0022274A /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,6 +380,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.palnyan.PLNInformationViewControllerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -387,6 +396,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.palnyan.PLNInformationViewControllerDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -418,6 +428,7 @@
 				E90653FF1BC763F600452883 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

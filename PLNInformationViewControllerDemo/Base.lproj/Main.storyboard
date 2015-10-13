@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="zCO-kM-3fj">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
@@ -31,8 +32,16 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Root View Controller" id="XyP-C3-wDU"/>
+                    <connections>
+                        <outlet property="popoverButtonItem" destination="MRv-wl-NJD" id="wii-yx-5EQ"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rmE-yd-Ixs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <barButtonItem title="Popover" id="MRv-wl-NJD">
+                    <connections>
+                        <action selector="popover:" destination="9m9-xo-3L6" id="2vD-Zc-d60"/>
+                    </connections>
+                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="852" y="427"/>
         </scene>

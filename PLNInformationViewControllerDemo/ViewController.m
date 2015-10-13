@@ -13,6 +13,8 @@
 	PLNInformationViewController *vc;
 }
 
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *popoverButtonItem;
+
 @end
 
 @implementation ViewController
@@ -27,6 +29,19 @@
 	NSString *path = [[NSBundle mainBundle] pathForResource:@"PLNInformation" ofType:@"plist"];
 	vc.components = [NSArray arrayWithContentsOfFile:path];
 	vc.delegate = self;
+	
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+		self.navigationItem.rightBarButtonItem = _popoverButtonItem;
+	}
+}
+
+#pragma mark - Actions
+
+- (IBAction)popover:(id)sender {
+	UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
+	UIPopoverController *pc = [[UIPopoverController alloc] initWithContentViewController:nc];
+	pc.delegate = vc;
+	[pc presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:TRUE];
 }
 
 #pragma mark - UITableViewControllerDataSource
@@ -39,9 +54,9 @@
 	static NSString *ReuseIdentifier = @"Cell";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ReuseIdentifier];
 	if (indexPath.row == 0) {
-		cell.textLabel.text = @"push";
+		cell.textLabel.text = @"Push";
 	} else {
-		cell.textLabel.text = @"present modal";
+		cell.textLabel.text = @"Modal";
 	}
 	return cell;
 }
