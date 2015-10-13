@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "PLNInformationViewController"
-  s.version      = "0.0.8"
+  s.version      = "0.0.9"
   s.summary      = "PLNInformationViewController provides simple UI for about this application."
 
   s.description  = <<-DESC
