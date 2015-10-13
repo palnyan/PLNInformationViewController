@@ -178,7 +178,7 @@
 			return nil;
 		}
 	}
-	return data[@"Name"];
+	return NSLocalizedString(data[@"Name"], "");
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

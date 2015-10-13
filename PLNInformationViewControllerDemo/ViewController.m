@@ -40,7 +40,6 @@
 - (IBAction)popover:(id)sender {
 	UINavigationController *nc = [[UINavigationController alloc] initWithRootViewController:vc];
 	UIPopoverController *pc = [[UIPopoverController alloc] initWithContentViewController:nc];
-	pc.delegate = vc;
 	[pc presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:TRUE];
 }
 
